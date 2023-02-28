@@ -1,1 +1,26 @@
+import pandas
+import numpy as np
 
+df = pandas.read_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\BPI_Challenge_2012.csv')
+
+# Split the data into training and test sets and save them
+def train_test_split(df, test_size=0.2):
+    df = df.sample(frac=1).reset_index(drop=True)
+    train_size = int(len(df) * (1 - test_size))
+    
+    
+    train = df[:train_size]
+    test = df[train_size:]
+
+    #sort the data by case:concept:name and date
+    train = train.groupby(['case:concept:name'])
+
+
+    # Save the data
+    train.to_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\Train_BPI_Challenge_2012.csv', index=False)
+    test.to_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\Test_BPI_Challenge_2012.csv', index=False)
+    
+
+
+
+train_test_split(df)
