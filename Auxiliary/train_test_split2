@@ -15,7 +15,6 @@ def train_test_split(df, test_size=0.2):
 
     #sort the data by case:concept:name and date
     dftrainmax = dftrain.groupby(by='case:concept:name', as_index = False)['time:timestamp'].max()
-    dftestmin = dftest.groupby(by='case:concept:name', as_index = False)['time:timestamp'].min()
     
     #defining split time variable to check for overlap and selecting only rows that don't overlap
     min_split_time = dftest['time:timestamp'].min()
@@ -25,6 +24,8 @@ def train_test_split(df, test_size=0.2):
     #print(dftrain_no_overlap)
     #print(dftrain)
     #print(dftest)
+
+    dftest = dftest.groupby(by='case:concept:name', as_index = False).min()
 
     #Save the data
     dftrain_no_overlap.to_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\Train_BPI_Challenge_2012.csv', index=False)
