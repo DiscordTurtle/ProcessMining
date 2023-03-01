@@ -24,10 +24,13 @@ def train_test_split(df, test_size=0.2):
     dftrain_no_overlap = dftrainmax[dftrainmax['time:timestamp']<min_split_time]
 
 
-    print(dftrain['case:concept:name'].isin(list([dftrain['case:concept:name']])))
+    dftrain_mask = dftrain['case:concept:name'].isin(list([dftrain_no_overlap['case:concept:name']]))
 
+    #print(dftrainmax['time:timestamp']<min_split_time)
+    print(dftrain_mask)
     print(dftrain)
-    print(list(dftrain_no_overlap['case:concept:name']))
+    #print(list(dftrain_no_overlap['case:concept:name']))
+
     #Save the data
     #dftrain_no_overlap.to_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\Train_BPI_Challenge_2012.csv', index=False)
     #dftest.to_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\Test_BPI_Challenge_2012.csv', index=False)
