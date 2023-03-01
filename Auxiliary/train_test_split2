@@ -1,7 +1,7 @@
 import pandas
 import numpy as np
 
-df = pandas.read_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\BPI_Challenge_2012.csv')
+df = pandas.read_csv('..\Model\BPI_Challenge_2012.csv')
 
 # Split the data into training and test sets and save them
 def train_test_split(df, test_size=0.2):
@@ -32,8 +32,8 @@ def train_test_split(df, test_size=0.2):
     #print(list(dftrain_no_overlap['case:concept:name']))
 
     #Save the data
-    #dftrain_no_overlap.to_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\Train_BPI_Challenge_2012.csv', index=False)
-    #dftest.to_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\Test_BPI_Challenge_2012.csv', index=False)
+    dftrain_no_overlap.to_csv('..Model\Train_BPI_Challenge_2012.csv', index=False)
+    dftest.to_csv('..\Model\Test_BPI_Challenge_2012.csv', index=False)
     
 
 
