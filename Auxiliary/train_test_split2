@@ -13,6 +13,9 @@ def train_test_split(df, test_size=0.2):
     dftrain = df[:train_size]
     dftest = df[train_size:]
 
+    #print(dftrain)
+    #print(dftest)
+
     #sort the data by case:concept:name and date
     dftrainmax = dftrain.groupby(by='case:concept:name', as_index = False)['time:timestamp'].max()
     
@@ -20,16 +23,14 @@ def train_test_split(df, test_size=0.2):
     min_split_time = dftest['time:timestamp'].min()
     dftrain_no_overlap = dftrainmax[dftrainmax['time:timestamp']<min_split_time]
 
-    #print(dftrainmax)
-    #print(dftrain_no_overlap)
-    #print(dftrain)
-    #print(dftest)
 
-    dftest = dftest.groupby(by='case:concept:name', as_index = False).min()
+    print(dftrain['case:concept:name'].isin(list([dftrain['case:concept:name']])))
 
+    print(dftrain)
+    print(list(dftrain_no_overlap['case:concept:name']))
     #Save the data
-    dftrain_no_overlap.to_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\Train_BPI_Challenge_2012.csv', index=False)
-    dftest.to_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\Test_BPI_Challenge_2012.csv', index=False)
+    #dftrain_no_overlap.to_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\Train_BPI_Challenge_2012.csv', index=False)
+    #dftest.to_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\Test_BPI_Challenge_2012.csv', index=False)
     
 
 
