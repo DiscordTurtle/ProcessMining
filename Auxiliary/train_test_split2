@@ -1,17 +1,26 @@
 import pandas
 import numpy as np
 
-df = pandas.read_csv('..\Model\BPI_Challenge_2012.csv')
+df = pandas.read_csv(r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\Git\ProcessMining\Model\BPI_Challenge_2012.csv')
 
 # Split the data into training and test sets and save them
 def train_test_split(df, test_size=0.2):
     df = df.sample(frac=1).reset_index(drop=True)
-    train_size = int(len(df) * (1 - test_size))
+    train_size = int(len(df) * (1 - test_size)) -1
     
     df = df.sort_values(by='case:REG_DATE')
     
     dftrain = df[:train_size]
     dftest = df[train_size:]
+
+    print(df)
+    #case attributes at which the split is made
+    split_case_name = df.iloc[train_size]['case:concept:name']
+    split_case_date = df.iloc[train_size]['case:REG_DATE']
+    print(split_case_name)
+    print(split_case_date)
+
+    print(df.loc[df['case:concept:name'] == split_case_name, df['case:REG_DATE'] == split_case_date])
 
     #print(dftrain)
     #print(dftest)
@@ -29,13 +38,13 @@ def train_test_split(df, test_size=0.2):
 
 
     #print(dftrainmax['time:timestamp']<min_split_time)
-    print(dftrain_mask)
-    print(dftrain)
+    #print(dftrain_mask)
+    #print(dftrain)
     #print(list(dftrain_no_overlap['case:concept:name']))
 
     #Save the data
-    dftrain_no_overlap.to_csv('..\Model\Train_BPI_Challenge_2012.csv', index=False)
-    dftest.to_csv('..\Model\Test_BPI_Challenge_2012.csv', index=False)
+    #dftrain_no_overlap.to_csv('..\Model\Train_BPI_Challenge_2012.csv', index=False)
+    #dftest.to_csv('..\Model\Test_BPI_Challenge_2012.csv', index=False)
     
 
 
