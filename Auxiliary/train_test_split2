@@ -26,13 +26,15 @@ def train_test_split(df, test_size=0.2):
 
     dftrain_mask = dftrain['case:concept:name'].isin(list([dftrain_no_overlap['case:concept:name']]))
 
+
+
     #print(dftrainmax['time:timestamp']<min_split_time)
     print(dftrain_mask)
     print(dftrain)
     #print(list(dftrain_no_overlap['case:concept:name']))
 
     #Save the data
-    dftrain_no_overlap.to_csv('..Model\Train_BPI_Challenge_2012.csv', index=False)
+    dftrain_no_overlap.to_csv('..\Model\Train_BPI_Challenge_2012.csv', index=False)
     dftest.to_csv('..\Model\Test_BPI_Challenge_2012.csv', index=False)
     
 
