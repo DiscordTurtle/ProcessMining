@@ -1,7 +1,7 @@
 #Anything besides the model instance goes here, please work in classes and functions
 import xmltodict
 import json
-import pm4py
+
 import datetime
 import pandas as pd
 
@@ -25,15 +25,15 @@ class Model:
         return (date2 - date1).total_seconds()
 
     # Export DataFrame to CSV
-    def save_csv(DataFrame,file):
-        DataFrame.to_csv(file, index=False)
+    def save_csv(DataFrame,file_path):
+        DataFrame.to_csv(file_path, index=False, sep=',')
         
     # Import CSV to DataFrame
-    def get_csv(file): 
-        return pd.read_csv(file, sep=',')
+    def get_csv(file_path): 
+        return pd.read_csv(file_path, sep=',')
         
 #everything that only runs once (like converting files) goes here
-class Auxliary:
+class Auxiliary:
 
     # Convert XML to JSON
     def XML_to_JSON(xml_file_path):
@@ -46,53 +46,59 @@ class Auxliary:
                 json_file.write(json_data)
 
     # Convert XES to CSV
-    def XES_to_CSV(xes_file):
+    '''def XES_to_CSV(xes_file):
         log = pm4py.read_xes(xes_file)
         pd = pm4py.convert_to_dataframe(log)
-        pd.to_csv(xes_file[:-4] + '.csv', index=False)
+        pd.to_csv(xes_file[:-4] + '.csv', index=False)'''
 
     # split the data into training and test data
     def train_test_split(df, test_size=0.2):
-        df = df.sample(frac=1).reset_index(drop=True)
         train_size = int(len(df) * (1 - test_size)) -1
-        
-        df = df.sort_values(by='case:REG_DATE')
-        
-        dftrain = df[:train_size]
-        dftest = df[train_size:]
+    
+        #print(df)
 
-        print(df)
+        df_train = df[:train_size]
+        df_test = df[train_size:]
+
         #case attributes at which the split is made
         split_case_name = df.iloc[train_size]['case:concept:name']
         split_case_date = df.iloc[train_size]['case:REG_DATE']
-        print(split_case_name)
-        print(split_case_date)
 
-        print(df.loc[df['case:concept:name'] == split_case_name, df['case:REG_DATE'] == split_case_date])
+        #index of first occurence of entry on which to split
+        split_index = df.index[(df['case:concept:name'] == split_case_name) & (df['case:REG_DATE'] == split_case_date)].min()
 
-        #print(dftrain)
-        #print(dftest)
+        df_train = df[0:split_index]
+        df_test = df[split_index:len(df)]
 
-        #sort the data by case:concept:name and date
-        dftrainmax = dftrain.groupby(by='case:concept:name', as_index = False)['time:timestamp'].max()
+        Model.save_csv(df_train, r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\ProcessMining\Model\Train_BPI_Challenge_2012_train_before.csv')
+        print(df_train)
+
+        min_split_time = df_test['time:timestamp'].min()
+
+        
+        
+        
+
+        #get the max timestamp for each case in the training data
+        df_train_max = df_train.groupby(by='case:concept:name', as_index = False)['time:timestamp'].max()
+        
         
         #defining split time variable to check for overlap and selecting only rows that don't overlap
-        min_split_time = dftest['time:timestamp'].min()
-        dftrain_no_overlap = dftrainmax[dftrainmax['time:timestamp']<min_split_time]
+        min_split_time = df_test['time:timestamp'].min()
+        df_train_no_overlap = df_train_max[df_train_max['time:timestamp']<min_split_time]
 
 
-        dftrain_mask = dftrain['case:concept:name'].isin(list([dftrain_no_overlap['case:concept:name']]))
+        df_train_mask = df_train['case:concept:name'].isin(list(df_train_no_overlap['case:concept:name'])) #<- does not work, only returns false
+
+        df_train = df_train[df_train_mask]
 
 
-
-        #print(dftrainmax['time:timestamp']<min_split_time)
-        #print(dftrain_mask)
-        #print(dftrain)
-        #print(list(dftrain_no_overlap['case:concept:name']))
+        print(df_train)
+        print(df_test)
 
         #Save the data
-        #dftrain_no_overlap.to_csv('..\Model\Train_BPI_Challenge_2012.csv', index=False)
-        #dftest.to_csv('..\Model\Test_BPI_Challenge_2012.csv', index=False)
+        Model.save_csv(df_train, r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\ProcessMining\Model\Train_BPI_Challenge_2012_train_after.csv')
+        Model.save_csv(df_test, r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\ProcessMining\Model\Train_BPI_Challenge_2012_test.csv')
         
         
 def main():
