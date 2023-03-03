@@ -1,7 +1,7 @@
 #Anything besides the model instance goes here, please work in classes and functions
 import xmltodict
 import json
-
+import pm4py
 import datetime
 import pandas as pd
 
@@ -31,6 +31,11 @@ class Model:
     # Import CSV to DataFrame
     def get_csv(file_path): 
         return pd.read_csv(file_path, sep=',')
+    
+    
+    def naive_predictor(df):
+        #put naive predictor here
+        pass
         
 #everything that only runs once (like converting files) goes here
 class Auxiliary:
@@ -46,10 +51,10 @@ class Auxiliary:
                 json_file.write(json_data)
 
     # Convert XES to CSV
-    '''def XES_to_CSV(xes_file):
+    def XES_to_CSV(xes_file):
         log = pm4py.read_xes(xes_file)
         pd = pm4py.convert_to_dataframe(log)
-        pd.to_csv(xes_file[:-4] + '.csv', index=False)'''
+        pd.to_csv(xes_file[:-4] + '.csv', index=False)
 
     # split the data into training and test data
     def train_test_split(df, test_size=0.2):
