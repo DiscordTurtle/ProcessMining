@@ -94,4 +94,10 @@ class Auxliary:
         #dftrain_no_overlap.to_csv('..\Model\Train_BPI_Challenge_2012.csv', index=False)
         #dftest.to_csv('..\Model\Test_BPI_Challenge_2012.csv', index=False)
         
+        
+def main():
+    pass
 
+
+if __name__ == "__main__":
+    main()
