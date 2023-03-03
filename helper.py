@@ -2,8 +2,13 @@
 import xmltodict
 import json
 import pm4py
+import matplotlib as plt
 import datetime
 import pandas as pd
+import matplotlib.pyplot as plt2
+import seaborn as sns
+import numpy as np
+from sklearn.metrics import confusion_matrix
 
 
 #everything that runs for the model goes here
@@ -155,7 +160,72 @@ class Auxiliary:
             else:
                 df.at[i, 'Next Event'] = -1
         return df
-        
+class Graphs:
+
+    def tt_split_graph(df):
+        df_plot = df
+
+        df_plot = df_plot[:5000]
+        df_plot.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=.05)
+        plt2.show()
+    data = pd.DataFrame(Model.get_csv("BPI_Challenge_2012.csv"))
+    data_pred = pd.DataFrame(Model.get_csv("Tool_Prediction.csv"))
+    data_time = data.copy()
+    data_time['time:timestamp'] = data['time:timestamp'].map(Model.convert_to_datetime)
+    data_time['Next time'] = data_pred[['Next time']]
+
+    print(data_pred.corr())
+
+    #print(data.describe(include='all'))
+    def format_event(x):
+        if(x == "W_Nabellen incomplete dossiers"):
+            return("W_NaID")
+        if(x == "W_Nabellen offertes"):
+            return("W_NaO")
+        if(x == "O_SENT"):
+            return("O_SB")
+        return x[0:5:1]
+    data["concept:name:abreviation"] = data["concept:name"].map(format_event)
+
+    print("set the data")
+
+    def plot_amount(data_column): 
+        ax = sns.countplot(x=data_column)
+        return ax
+    #plot_amount(data["concept:name:abreviation"])
+    #plt2.show()
+    #Uncomment the plt.show() and above for the graph
+
+    y = data_pred['Next activity']
+    y_pred = data_pred['Predicted next activity']
+
+    def plot_confusion_matrix(y, y_pred):
+        y = y.replace(np.nan, "NULL")
+        y_pred = y_pred.replace(np.nan, 'NULL')
+        cf_matrix = confusion_matrix(y, y_pred)
+        ax = sns.heatmap(cf_matrix)
+        return ax
+
+    def plot_confusion_matrix_percent(y, y_pred):
+        y = y.replace(np.nan, "NULL")
+        y_pred = y_pred.replace(np.nan, 'NULL')
+        cf_matrix = confusion_matrix(y, y_pred)
+        ax = sns.heatmap(cf_matrix/np.sum(cf_matrix), annot=True, fmt='.2%', cmap='Blues')
+        return ax
+
+    def plot_pairplot(data, x_vars_v, y_vars_v, hue_v = None): 
+        ax = sns.pairplot(data, x_vars = x_vars_v, y_vars = y_vars_v, hue = hue_v )
+        return ax
+    #plot_pairplot(data_time, ['time:timestamp', 'concept:name', 'Next time'], ['time:timestamp', 'concept:name', 'Next time'])
+    #plt2.show()
+    #print('pairplot incoming')
+    #plot_pairplot(data_time, ['time:timestamp','case:concept:name', 'Next time'], ['time:timestamp','case:concept:name', 'Next time'], 'concept:name')
+    #plt2.show()
+
+    #plot_pairplot(data_time, ['Next time'], ['concept:name'])
+    #plt2.show()
+    #print("done")
+    #print(data.corr())
         
 def main():
     pass
