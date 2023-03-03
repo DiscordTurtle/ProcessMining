@@ -70,8 +70,8 @@ class Auxiliary:
         df_train = df[0:split_index]
         df_test = df[split_index:len(df)]
 
-        Model.save_csv(df_train, r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\ProcessMining\Model\Train_BPI_Challenge_2012_train_before.csv')
-        print(df_train)
+        # Model.save_csv(df_train, 'BPI_Challenge_2012_train.csv')
+        # print(df_train)
 
         min_split_time = df_test['time:timestamp'].min()
 
@@ -97,8 +97,8 @@ class Auxiliary:
         print(df_test)
 
         #Save the data
-        Model.save_csv(df_train, r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\ProcessMining\Model\Train_BPI_Challenge_2012_train_after.csv')
-        Model.save_csv(df_test, r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\ProcessMining\Model\Train_BPI_Challenge_2012_test.csv')
+        Model.save_csv(df_train, 'BPI_Challenge_2012_train.csv')
+        Model.save_csv(df_test, 'BPI_Challenge_2012_test.csv')
         
         
 def main():
