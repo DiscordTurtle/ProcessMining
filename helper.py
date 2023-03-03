@@ -1,9 +1,10 @@
 #Anything besides the model instance goes here, please work in classes and functions
 import xmltodict
 import json
-
+import matplotlib as plt
 import datetime
 import pandas as pd
+import matplotlib.pyplot as plt2
 
 
 #everything that runs for the model goes here
@@ -100,6 +101,15 @@ class Auxiliary:
         Model.save_csv(df_train, r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\ProcessMining\Model\Train_BPI_Challenge_2012_train_after.csv')
         Model.save_csv(df_test, r'C:\Users\20212387\OneDrive - TU Eindhoven\Documents\Y2\DBL process mining\ProcessMining\Model\Train_BPI_Challenge_2012_test.csv')
         
+#class used for making graphs
+class Graphs:
+
+    def tt_split_graph(df):
+        df_plot = df
+
+        df_plot = df_plot[:5000]
+        df_plot.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=.05)
+        plt2.show()
         
 def main():
     pass
