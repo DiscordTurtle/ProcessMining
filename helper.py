@@ -11,7 +11,7 @@ class Model:
     
     
     # Convert string to datetime object
-    def convert_to_datetime(self,date):
+    def convert_to_datetime(date):
         try:
             date_object = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f%z')
         except:
@@ -19,10 +19,13 @@ class Model:
         return date_object
 
     # Get time difference in seconds between two dates
-    def get_time_difference_as_number(self,date1, date2):
-        date1 = self.convert_to_datetime(date1)
-        date2 = self.convert_to_datetime(date2)
+    def get_time_difference_as_number(date1, date2):
+        date1 = Model.convert_to_datetime(date1)
+        date2 = Model.convert_to_datetime(date2)
         return (date2 - date1).total_seconds()
+    
+    def convert_to_seconds(date):
+        return Model.get_time_difference_as_number('1970-01-01 00:00:00.000000+00:00', date)
 
     # Export DataFrame to CSV
     def save_csv(DataFrame,file_path):
@@ -104,6 +107,32 @@ class Auxiliary:
         #Save the data
         Model.save_csv(df_train, 'BPI_Challenge_2012_train.csv')
         Model.save_csv(df_test, 'BPI_Challenge_2012_test.csv')
+
+    def preprocess_data(df):
+        lengthOfDf = len(df.index)
+
+        #map the lifecycle:transition
+        df['lifecycle:transition'] = df['lifecycle:transition'].map({'COMPLETE':2,'SCHEDULE':0,'START':1})
+
+        #create a dictionary for the concept:name
+        unique_activities = df['concept:name'].unique()
+        dictionary = {unique_activities[i]: i for i in range(unique_activities.size)}
+        #map the concept:name
+        df['concept:name'] = df['concept:name'].map(dictionary)
+
+        #changing time:timestamp and case:REG_DATE to seconds
+        for i in range(lengthOfDf):
+            df.at[i, 'time:timestamp'] = Model.convert_to_seconds(df.at[i, 'time:timestamp'])
+            df.at[i, 'case:REG_DATE'] = Model.convert_to_seconds(df.at[i, 'case:REG_DATE'])
+            #added the ground truth
+            if i < lengthOfDf - 1:
+                if df.at[i, 'case:concept:name'] == df.at[i + 1, 'case:concept:name']:
+                    df.at[i, 'Next Event'] = df.at[i + 1, 'concept:name']
+                else:
+                    df.at[i, 'Next Event'] = -1
+            else:
+                df.at[i, 'Next Event'] = -1
+        return df
         
         
 def main():
