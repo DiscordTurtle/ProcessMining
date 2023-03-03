@@ -2,13 +2,14 @@
 import pandas as pd
 import numpy as np
 
+#############PLEASE PUT THIS IN EITHER HELPER OR MAIN#############
+# (and make a method for it)
+
 
 #import the neccessary module
-from readCSV import importCSV
-from OutputCSV import exportCSV
-from ConvertDatetime import get_time_difference_as_number
+from helper import Model, Auxliary
 
-df = importCSV('BPI_Challenge_2012.csv')
+df = Model.get_csv('BPI_Challenge_2012.csv')
 lengthOfDf = len(df.index)
 
 #add a new column with the position of each case
@@ -37,7 +38,7 @@ nextTimeCount = [0 for i in range(len(nextTime))]
 for i in range(lengthOfDf):
     position = df.at[i, 'position'].astype(int)
     if position != 1:
-        nextTime[position - 1] += get_time_difference_as_number(df.at[i - 1, 'time:timestamp'], df.at[i, 'time:timestamp'])
+        nextTime[position - 1] += Model.get_time_difference_as_number(df.at[i - 1, 'time:timestamp'], df.at[i, 'time:timestamp'])
         nextTimeCount[position - 1] += 1
 
 for i in range(1, lengthOfUniquePosition):
@@ -48,7 +49,8 @@ for i in range(lengthOfDf - 1):
     if df.at[i, 'position'] + 1 <= len(df_mode.index):
         df.at[i, 'Next activity'] = df.at[i + 1, 'concept:name']
         df.at[i, 'Predicted next activity'] = df_mode.at[df.at[i, 'position'] + 1]
-        df.at[i, 'Next time'] = get_time_difference_as_number(df.at[i, 'time:timestamp'], df.at[i + 1, 'time:timestamp'])
+        df.at[i, 'Next time'] = Model.get_time_difference_as_number(df.at[i, 'time:timestamp'], df.at[i + 1, 'time:timestamp'])
         df.at[i, 'Predicted next time'] = nextTime[df.at[i, 'position'].astype(int)]
 
-exportCSV(df)
+
+Model.save_csv(df, 'BPI_Challenge_2012.csv')
