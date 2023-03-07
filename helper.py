@@ -145,6 +145,7 @@ class Graphs:
         df_plot = df_plot[:5000]
         df_plot.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=.05)
         plt2.show()
+        print('hello')
         
 def main():
     pass
