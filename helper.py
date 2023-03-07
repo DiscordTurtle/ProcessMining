@@ -84,6 +84,7 @@ class Auxiliary:
 
     # split the data into training and test data
     def train_test_split(df, test_size=0.2):
+        print("Start splitting data")
         train_size = int(len(df) * (1 - test_size)) -1
     
         #print(df)
@@ -124,14 +125,17 @@ class Auxiliary:
         df_train = df_train[df_train_mask]
 
 
-        print(df_train)
-        print(df_test)
+        # print(df_train)
+        # print(df_test)
 
         #Save the data
-        Model.save_csv(df_train, 'BPI_Challenge_2012_train.csv')
-        Model.save_csv(df_test, 'BPI_Challenge_2012_test.csv')
+        # Model.save_csv(df_train, 'BPI_Challenge_2012_train.csv')
+        # Model.save_csv(df_test, 'BPI_Challenge_2012_test.csv')
+        print("Finished splitting data")
+        return df_train, df_test
 
     def preprocess_data(df):
+        print("Start preprocessing data")
         lengthOfDf = len(df.index)
 
         #map the lifecycle:transition
@@ -139,19 +143,22 @@ class Auxiliary:
 
         #create a dictionary for the concept:name
         unique_activities = df['concept:name'].unique()
+        for i in unique_activities:
+            df[i] = [1 if x == i else 0 for x in df['concept:name']]
         dictionary = {unique_activities[i]: i for i in range(unique_activities.size)}
         #map the concept:name
         df['concept:name'] = df['concept:name'].map(dictionary)
 
         #create new columns for the date
+        df['year'] = [Model.get_year(x) for x in df['time:timestamp']]
+        df['month'] = [Model.get_month(x) for x in df['time:timestamp']]
+        df['day'] = [Model.get_day(x) for x in df['time:timestamp']]
+        df['hour'] = [Model.get_hour(x) for x in df['time:timestamp']]
+        df['minute'] = [Model.get_minute(x) for x in df['time:timestamp']]
+        df['second'] = [Model.get_second(x) for x in df['time:timestamp']]
+
         for i in range(lengthOfDf):
-            df.at[i, 'year'] = Model.get_year(df.at[i, 'time:timestamp'])
-            df.at[i, 'month'] = Model.get_month(df.at[i, 'time:timestamp'])
-            df.at[i, 'day'] = Model.get_day(df.at[i, 'time:timestamp'])
-            df.at[i, 'hour'] = Model.get_hour(df.at[i, 'time:timestamp'])
-            df.at[i, 'minute'] = Model.get_minute(df.at[i, 'time:timestamp'])
-            df.at[i, 'second'] = Model.get_second(df.at[i, 'time:timestamp'])
-            #added the ground truth
+            #create new column for the ground truth
             if i < lengthOfDf - 1:
                 if df.at[i, 'case:concept:name'] == df.at[i + 1, 'case:concept:name']:
                     df.at[i, 'Next Event'] = df.at[i + 1, 'concept:name']
@@ -159,7 +166,10 @@ class Auxiliary:
                     df.at[i, 'Next Event'] = -1
             else:
                 df.at[i, 'Next Event'] = -1
+        print("Finished preprocessing data")
+
         return df
+    
 class Graphs:
 
     def tt_split_graph(df):
@@ -168,13 +178,13 @@ class Graphs:
         df_plot = df_plot[:5000]
         df_plot.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=.05)
         plt2.show()
-    data = pd.DataFrame(Model.get_csv("BPI_Challenge_2012.csv"))
-    data_pred = pd.DataFrame(Model.get_csv("Tool_Prediction.csv"))
-    data_time = data.copy()
-    data_time['time:timestamp'] = data['time:timestamp'].map(Model.convert_to_datetime)
-    data_time['Next time'] = data_pred[['Next time']]
+        data = pd.DataFrame(Model.get_csv("BPI_Challenge_2012.csv"))
+        data_pred = pd.DataFrame(Model.get_csv("Tool_Prediction.csv"))
+        data_time = data.copy()
+        data_time['time:timestamp'] = data['time:timestamp'].map(Model.convert_to_datetime)
+        data_time['Next time'] = data_pred[['Next time']]
 
-    print(data_pred.corr())
+        print(data_pred.corr())
 
     #print(data.describe(include='all'))
     def format_event(x):
@@ -185,7 +195,7 @@ class Graphs:
         if(x == "O_SENT"):
             return("O_SB")
         return x[0:5:1]
-    data["concept:name:abreviation"] = data["concept:name"].map(format_event)
+        data["concept:name:abreviation"] = data["concept:name"].map(format_event)
 
     print("set the data")
 
@@ -196,8 +206,8 @@ class Graphs:
     #plt2.show()
     #Uncomment the plt.show() and above for the graph
 
-    y = data_pred['Next activity']
-    y_pred = data_pred['Predicted next activity']
+        y = data_pred['Next activity']
+        y_pred = data_pred['Predicted next activity']
 
     def plot_confusion_matrix(y, y_pred):
         y = y.replace(np.nan, "NULL")

@@ -10,9 +10,10 @@ from helper import Auxiliary
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
+df_train, df_test = Auxiliary.train_test_split(Auxiliary.preprocess_data(Model.get_csv('BPI_Challenge_2012.csv')))
 #read the data set
-df_train = Auxiliary.preprocess_data(Model.get_csv('BPI_Challenge_2012_train.csv'))
-df_test = Auxiliary.preprocess_data(Model.get_csv('BPI_Challenge_2012_test.csv'))
+# df_train = Auxiliary.preprocess_data(Model.get_csv('BPI_Challenge_2012_train.csv'))
+# df_test = Auxiliary.preprocess_data(Model.get_csv('BPI_Challenge_2012_test.csv'))
 
 #split the data into training and test sets
 X_train = df_train.drop(['org:resource', 'case:AMOUNT_REQ', 'Next Event', 'case:REG_DATE', 'time:timestamp'], axis=1)
