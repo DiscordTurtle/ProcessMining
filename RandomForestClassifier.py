@@ -15,8 +15,8 @@ df_train = Auxiliary.preprocess_data(Model.get_csv('BPI_Challenge_2012_train.csv
 df_test = Auxiliary.preprocess_data(Model.get_csv('BPI_Challenge_2012_test.csv'))
 
 #split the data into training and test sets
-X_train = df_train.drop(['org:resource', 'case:AMOUNT_REQ', 'Next Event', 'case:REG_DATE'], axis=1)
-X_test = df_test.drop(['org:resource', 'case:AMOUNT_REQ', 'Next Event', 'case:REG_DATE'], axis=1)
+X_train = df_train.drop(['org:resource', 'case:AMOUNT_REQ', 'Next Event', 'case:REG_DATE', 'time:timestamp'], axis=1)
+X_test = df_test.drop(['org:resource', 'case:AMOUNT_REQ', 'Next Event', 'case:REG_DATE', 'time:timestamp'], axis=1)
 y_train = df_train['Next Event']
 y_test = df_test['Next Event']
 
