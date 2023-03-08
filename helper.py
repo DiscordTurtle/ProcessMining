@@ -172,11 +172,15 @@ class Auxiliary:
     
 class Graphs:
 
-    def tt_split_graph(df_tr, df_te):
+    def tt_split_graph(df, df_tr, df_te):
         
         #defining dataframes
+        df_base = df
         df_train = df_tr
         df_test = df_te
+
+        #dataframe to mark removed entries for tt split
+        df_removed = df_base[(df_base['case:concept:name'].isin(list(df_train['case:concept:name'])))]
 
         #selecting a workable amount of data
         df_train_sample = df_tr[df_tr.index % 500 == 0]
@@ -207,6 +211,11 @@ class Graphs:
         sns.scatterplot(data=df_test, x ='time:timestamp', y ='case:concept:name', s=20, ax = ax1, hue = 'concept:name')
 
         ax1.get_legend().remove()
+        #adding lines to define tt split
+        ax1.axvline(df_test['time:timestamp'].min())
+        ax1.axhline(df_test['case:concept:name'].min())
+
+        ax1.axvline(df_removed['case:concept:name'], color = 'red')
         
         plt.show()
 
