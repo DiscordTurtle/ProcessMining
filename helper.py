@@ -2,10 +2,10 @@
 import xmltodict
 import json
 import pm4py
-import matplotlib as plt
+#import matplotlib as plt
 import datetime
 import pandas as pd
-import matplotlib.pyplot as plt2
+import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from sklearn.metrics import confusion_matrix
@@ -120,7 +120,7 @@ class Auxiliary:
         df_train_no_overlap = df_train_max[df_train_max['time:timestamp']<min_split_time]
 
 
-        df_train_mask = df_train['case:concept:name'].isin(list(df_train_no_overlap['case:concept:name'])) #<- does not work, only returns false
+        df_train_mask = df_train['case:concept:name'].isin(list(df_train_no_overlap['case:concept:name']))
 
         df_train = df_train[df_train_mask]
 
@@ -172,19 +172,38 @@ class Auxiliary:
     
 class Graphs:
 
-    def tt_split_graph(df):
-        df_plot = df
+    def tt_split_graph(df_tr, df_te):
+        
+        #defining dataframes
+        df_train = df_tr
+        df_test = df_te
 
-        df_plot = df_plot[:5000]
-        df_plot.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=.05)
-        plt2.show()
-        data = pd.DataFrame(Model.get_csv("BPI_Challenge_2012.csv"))
-        data_pred = pd.DataFrame(Model.get_csv("Tool_Prediction.csv"))
-        data_time = data.copy()
-        data_time['time:timestamp'] = data['time:timestamp'].map(Model.convert_to_datetime)
-        data_time['Next time'] = data_pred[['Next time']]
+        #selecting a workable amount of data
+        df_train_sample = df_tr[df_tr.index % 500 == 0]
+        df_test_sample =  df_te[df_te.index % 500 == 0]
 
-        print(data_pred.corr())
+        #selecting only the case identifyers of this data
+        df_train_case = df_train_sample['case:concept:name']
+        df_test_case = df_test_sample['case:concept:name']
+
+        #selecting every occurence of the selected cases
+        df_train = df_train[df_train['case:concept:name'].isin(list(df_train_case))]
+        df_test = df_test[df_test['case:concept:name'].isin(list(df_test_case))]
+
+        #plotting the 2 datasets into 1 figure
+        fig, ax1 = plt.subplots(nrows=1, ncols=1, sharex=True, sharey=True)
+
+        df_train.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=2, ax = ax1, figsize = (25, 10))
+        df_test.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=2, ax = ax1, c='red')
+        plt.show()
+
+        # data = pd.DataFrame(Model.get_csv("BPI_Challenge_2012.csv"))
+        # data_pred = pd.DataFrame(Model.get_csv("Tool_Prediction.csv"))
+        # data_time = data.copy()
+        # data_time['time:timestamp'] = data['time:timestamp'].map(Model.convert_to_datetime)
+        # data_time['Next time'] = data_pred[['Next time']]
+
+        # print(data_pred.corr())
 
     #print(data.describe(include='all'))
     def format_event(x):
