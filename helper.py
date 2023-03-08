@@ -190,8 +190,15 @@ class Graphs:
         df_train = df_train[df_train['case:concept:name'].isin(list(df_train_case))]
         df_test = df_test[df_test['case:concept:name'].isin(list(df_test_case))]
 
+        #adding column for only y/m/d of cases
+        df_train['time:y/m/d'] = df_train['time:timestamp'].str[:10]
+        df_test['time:y/m/d'] = df_test['time:timestamp'].str[:10]
+
         #plotting the 2 datasets into 1 figure
         fig, ax1 = plt.subplots(nrows=1, ncols=1, sharex=True, sharey=True)
+        #fixes the x label
+        ax1.set_xticklabels(df_train['time:y/m/d'])
+        ax1.xaxis.set_major_locator(plt.MaxNLocator(10))
 
         df_train.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=2, ax = ax1, figsize = (25, 10))
         df_test.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=2, ax = ax1, c='red')
