@@ -195,13 +195,19 @@ class Graphs:
         df_test['time:y/m/d'] = df_test['time:timestamp'].str[:10]
 
         #plotting the 2 datasets into 1 figure
-        fig, ax1 = plt.subplots(nrows=1, ncols=1, sharex=True, sharey=True)
+        fig, ax1 = plt.subplots(nrows=1, ncols=1, sharex=True, sharey=True, figsize = (35,10))
         #fixes the x label
         ax1.set_xticklabels(df_train['time:y/m/d'])
         ax1.xaxis.set_major_locator(plt.MaxNLocator(10))
 
-        df_train.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=2, ax = ax1, figsize = (25, 10))
-        df_test.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=2, ax = ax1, c='red')
+        #df_train.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=2, ax = ax1, figsize = (25, 10))
+        #df_test.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=2, ax = ax1, c='red')
+
+        sns.scatterplot(data=df_train, x ='time:timestamp', y ='case:concept:name', s=20, ax = ax1, hue ='concept:name')
+        sns.scatterplot(data=df_test, x ='time:timestamp', y ='case:concept:name', s=20, ax = ax1, hue = 'concept:name')
+
+        ax1.get_legend().remove()
+        
         plt.show()
 
         # data = pd.DataFrame(Model.get_csv("BPI_Challenge_2012.csv"))
