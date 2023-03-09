@@ -15,13 +15,16 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import r2_score
 
+import time
+start_time = time.time()
+
 #Import CSV to DataFrame
 df = Model.get_csv('BPI_Challenge_2012.csv')
 
 unique_activities = df['concept:name'].unique()
 
 #Create a copy of df_test before preprocessing data for visualization
-df_train0, vizualization = Auxiliary.train_test_split(df)
+df_train0, visualization = Auxiliary.train_test_split(df)
 
 #Preprocess data and then split it into train and test sets
 df_train, df_test = Auxiliary.train_test_split(Auxiliary.preprocess_data(df))
@@ -46,19 +49,16 @@ y_pred_rf = rf.predict(X_test_rf)
 accuracy_rf = accuracy_score(y_test_rf, y_pred_rf)
 print("Accuracy:", accuracy_rf)
 
-vizualization['Next Event number'] = y_test_rf
-vizualization['Predicted Event number'] = y_pred_rf
+visualization['Next Event number'] = y_test_rf
+visualization['Predicted Event number'] = y_pred_rf
 
 dictionary = {i : unique_activities[i] for i in range(unique_activities.size)}
 
-vizualization['Next Event string'] = vizualization['Next Event number'].map(dictionary)
-vizualization['Predicted Event string'] = vizualization['Predicted Event number'].map(dictionary)
+visualization['Next Event string'] = visualization['Next Event number'].map(dictionary)
+visualization['Predicted Event string'] = visualization['Predicted Event number'].map(dictionary)
 
 #END of the implemenation of the Random Forest Classifier
 print("END of the implemenation of the Random Forest Classifier")
-
-#START of the implemenation of the Linear Regression
-print("START of the implemenation of the Linear Regression")
 
 #START of the implemenation of the Linear Regression
 print("START of the implemenation of the Linear Regression")
@@ -185,4 +185,6 @@ print(df_encoded_test.corr())
 #END of the implemenation of the Linear Regression
 print("END of the implemenation of the Linear Regression")
 
-Model.save_csv(vizualization, 'final_df.csv')
+Model.save_csv(visualization, 'final_df.csv')
+
+print("--- %s seconds ---" % (time.time() - start_time))
