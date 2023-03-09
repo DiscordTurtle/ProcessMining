@@ -184,8 +184,8 @@ class Graphs:
         df_removed = df_removed[df_mask]
 
         #selecting a workable amount of data
-        #df_train_sample = df_tr[df_tr.index % 500 == 0]
-        #df_test_sample =  df_te[df_te.index % 500 == 0]
+        df_train_sample = df_tr[df_tr.index % 500 == 0]
+        df_test_sample =  df_te[df_te.index % 500 == 0]
 
         #selecting only the case identifyers of this data
         df_train_case = df_train_sample['case:concept:name']
