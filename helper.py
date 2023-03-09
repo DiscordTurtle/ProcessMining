@@ -175,16 +175,17 @@ class Graphs:
     def tt_split_graph(df, df_tr, df_te):
         
         #defining dataframes
-        df_base = df
+        df_removed = df
         df_train = df_tr
         df_test = df_te
 
         #dataframe to mark removed entries for tt split
-        df_removed = df_base[(df_base['case:concept:name'].isin(list(df_train['case:concept:name'])))]
+        df_mask = df_removed['case:concept:name'].isin(df_train['case:concept:name'])
+        df_removed = df_removed[df_mask]
 
         #selecting a workable amount of data
-        df_train_sample = df_tr[df_tr.index % 500 == 0]
-        df_test_sample =  df_te[df_te.index % 500 == 0]
+        #df_train_sample = df_tr[df_tr.index % 500 == 0]
+        #df_test_sample =  df_te[df_te.index % 500 == 0]
 
         #selecting only the case identifyers of this data
         df_train_case = df_train_sample['case:concept:name']
@@ -207,15 +208,17 @@ class Graphs:
         #df_train.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=2, ax = ax1, figsize = (25, 10))
         #df_test.plot(kind='scatter', x='time:timestamp', y='case:concept:name', s=2, ax = ax1, c='red')
 
-        sns.scatterplot(data=df_train, x ='time:timestamp', y ='case:concept:name', s=20, ax = ax1, hue ='concept:name')
-        sns.scatterplot(data=df_test, x ='time:timestamp', y ='case:concept:name', s=20, ax = ax1, hue = 'concept:name')
+        sns.scatterplot(data=df_train, x ='time:timestamp', y ='case:concept:name', s=40, ax = ax1, hue ='concept:name', linewidth=0)
+        sns.scatterplot(data=df_test, x ='time:timestamp', y ='case:concept:name', s=40, ax = ax1, hue = 'concept:name', linewidth=0)
 
         ax1.get_legend().remove()
         #adding lines to define tt split
         ax1.axvline(df_test['time:timestamp'].min())
         ax1.axhline(df_test['case:concept:name'].min())
-
-        ax1.axvline(df_removed['case:concept:name'], color = 'red')
+        
+        #drawing lines for removed cases
+        #for case in list(df_removed['case:concept:name']):
+        #    ax1.axhline(case, color = 'red')
         
         plt.show()
 
