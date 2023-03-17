@@ -167,6 +167,10 @@ class Auxiliary:
                 df.at[i, 'Next Event'] = -1
         print("Finished preprocessing data")
 
+        df['time:timestamp'] = [Model.convert_to_datetime(x) for x in df['time:timestamp']]
+        df['case:REG_DATE'] = [Model.convert_to_datetime(x) for x in df['case:REG_DATE']]
+        df['time to complete'] = (df['time:timestamp'] - df['case:REG_DATE']).dt.seconds
+
         return df
     
     
