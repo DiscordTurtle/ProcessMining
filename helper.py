@@ -142,8 +142,9 @@ class Auxiliary:
 
         #create a dictionary for the concept:name
         unique_activities = df['concept:name'].unique()
-        for i in unique_activities:
-            df[i] = [1 if x == i else 0 for x in df['concept:name']]
+        # create a new column for each event
+        # for i in unique_activities:
+        #     df[i] = [1 if x == i else 0 for x in df['concept:name']]
         dictionary = {unique_activities[i]: i for i in range(unique_activities.size)}
         #map the concept:name
         df['concept:name'] = df['concept:name'].map(dictionary)
