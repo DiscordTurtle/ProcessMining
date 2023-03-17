@@ -21,6 +21,8 @@ X_test = df_test.drop(['org:resource', 'case:AMOUNT_REQ', 'Next Event', 'case:RE
 y_train = df_train['Next Event']
 y_test = df_test['Next Event']
 
+
+
 #create an instance of the Random Forest model and then fit this to our training data
 rf = RandomForestClassifier()
 rf.fit(X_train, y_train)

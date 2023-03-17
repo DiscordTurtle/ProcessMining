@@ -170,6 +170,9 @@ class Auxiliary:
 
         return df
     
+    
+    
+    
 class Graphs:
 
     def tt_split_graph(df, df_tr, df_te):
