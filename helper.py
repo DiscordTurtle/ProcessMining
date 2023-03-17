@@ -10,9 +10,6 @@ import seaborn as sns
 import numpy as np
 from sklearn.metrics import confusion_matrix
 
-#fdsfdsfdsf
-
-print()
 #everything that runs for the model goes here
 class Model:
     
