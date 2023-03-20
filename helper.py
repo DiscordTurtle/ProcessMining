@@ -83,11 +83,11 @@ class Auxiliary:
         pd.to_csv(xes_file[:-4] + '.csv', index=False)
 
     # split the data into training and test data
-    def train_test_split(df, test_size=0.2):
+    def train_test_split(df, test_size=0.20):
         print("Start splitting data")
         train_size = int(len(df) * (1 - test_size)) -1
     
-        #print(df)
+        #print(train_size)
 
         df_train = df[:train_size]
         df_test = df[train_size:]
@@ -123,6 +123,16 @@ class Auxiliary:
         df_train_mask = df_train['case:concept:name'].isin(list(df_train_no_overlap['case:concept:name']))
 
         df_train = df_train[df_train_mask]
+
+        #remove last percentage of train data to compensate for smaller traces (positive range so far 5-8%)
+        percentage_removed = 5
+        train_size_final = int(len(df_train) * (1 - (percentage_removed/100))) -1
+        #print(df_train)
+        df_train = df_train[:train_size_final]
+        #print(df_train)
+        #removing last case so df only contains full cases
+        last_case = df_train.iloc[len(df_train)-1]['case:concept:name']
+        df_train = df_train[df_train['case:concept:name'] != last_case]
 
 
         # print(df_train)
