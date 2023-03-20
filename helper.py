@@ -172,10 +172,13 @@ class Auxiliary:
             if i < lengthOfDf - 1:
                 if df.at[i, 'case:concept:name'] == df.at[i + 1, 'case:concept:name']:
                     df.at[i, 'Next Event'] = df.at[i + 1, 'concept:name']
+                    df.at[i, 'Next Time'] = Model.get_time_difference_as_number(df.at[i, 'time:timestamp'], df.at[i + 1, 'time:timestamp'])
                 else:
                     df.at[i, 'Next Event'] = -1
+                    df.at[i, 'Next Time'] = -1
             else:
                 df.at[i, 'Next Event'] = -1
+                df.at[i, 'Next Time'] = -1
         print("Finished preprocessing data")
 
         df['time:timestamp'] = [Model.convert_to_datetime(x) for x in df['time:timestamp']]
