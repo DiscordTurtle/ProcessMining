@@ -10,7 +10,6 @@ import seaborn as sns
 import numpy as np
 from sklearn.metrics import confusion_matrix
 
-
 #everything that runs for the model goes here
 class Model:
     
@@ -153,8 +152,9 @@ class Auxiliary:
 
         #create a dictionary for the concept:name
         unique_activities = df['concept:name'].unique()
-        for i in unique_activities:
-            df[i] = [1 if x == i else 0 for x in df['concept:name']]
+        # create a new column for each event
+        # for i in unique_activities:
+        #     df[i] = [1 if x == i else 0 for x in df['concept:name']]
         dictionary = {unique_activities[i]: i for i in range(unique_activities.size)}
         #map the concept:name
         df['concept:name'] = df['concept:name'].map(dictionary)
@@ -178,7 +178,14 @@ class Auxiliary:
                 df.at[i, 'Next Event'] = -1
         print("Finished preprocessing data")
 
+        df['time:timestamp'] = [Model.convert_to_datetime(x) for x in df['time:timestamp']]
+        df['case:REG_DATE'] = [Model.convert_to_datetime(x) for x in df['case:REG_DATE']]
+        df['time to complete'] = (df['time:timestamp'] - df['case:REG_DATE']).dt.seconds
+
         return df
+    
+    
+    
     
 class Graphs:
 
