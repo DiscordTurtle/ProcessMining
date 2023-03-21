@@ -307,5 +307,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-Model.save_csv(Auxiliary.preprocess_data(Model.get_csv('BPI_Challenge_2012_test.csv')), 'someTest.csv')
