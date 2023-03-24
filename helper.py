@@ -65,6 +65,15 @@ class Model:
 #everything that only runs once (like converting files) goes here
 class Auxiliary:
 
+    def one_hot_encode(number, unique_entries):
+        #24 activities sized array
+        act_array = []
+        act_array = [0] * unique_entries
+        act_array[number-1] = 1
+        act_array = np.asarray(act_array)
+        return act_array 
+    
+    
     # Convert XML to JSON
     def XML_to_JSON(xml_file_path):
         
