@@ -193,6 +193,7 @@ class Auxiliary:
         df['time:timestamp'] = [Model.convert_to_datetime(x) for x in df['time:timestamp']]
         df['case:REG_DATE'] = [Model.convert_to_datetime(x) for x in df['case:REG_DATE']]
         df['time to complete'] = (df['time:timestamp'] - df['case:REG_DATE']).dt.seconds
+        df['Week Day'] = df['time:timestamp'].apply(lambda x: x.strftime('%w'))
 
         return df
     
@@ -316,3 +317,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Model.save_csv(Auxiliary.preprocess_data(Model.get_csv('BPI_Challenge_2012.csv')), 'dsafds.csv')
