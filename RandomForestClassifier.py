@@ -24,7 +24,12 @@ y_test = df_test['Next Event']
 
 
 #create an instance of the Random Forest model and then fit this to our training data
-rf = RandomForestClassifier()
+rf = RandomForestClassifier(n_estimators= 600,
+ min_samples_split = 2,
+ min_samples_leaf = 4,
+ max_features = 'auto',
+ max_depth = 40,
+ bootstrap = True)
 rf.fit(X_train, y_train)
 
 #predict the data
