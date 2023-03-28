@@ -132,7 +132,7 @@ class Auxiliary:
 
         df_train = df_train[df_train_mask]
 
-        #remove last percentage of train data to compensate for smaller traces (positive range so far 5%)
+        #remove last percentage of train data to compensate for smaller traces (5% gives nice balance & definitely don't go over 10)
         percentage_removed = 5
         train_size_final = int(len(df_train) * (1 - (percentage_removed/100))) -1
         #print(df_train)
