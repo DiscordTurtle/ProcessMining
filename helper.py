@@ -201,10 +201,10 @@ class Auxiliary:
         print("Start preprocessing data")
         lengthOfDf = len(df.index)
 
-        df['case:concept:name'] = df['case:concept:name'].apply(lambda x: int(x.removeprefix('Application_')))
+        df['case:concept:name'] = df['case:concept:name'].apply(lambda x: int(x.lstrip('Application_')))
 
         #map the lifecycle:transition
-        df['lifecycle:transition'] = df['lifecycle:transition'].map({'COMPLETE':2,'SCHEDULE':0,'START':1})
+        df['lifecycle:transition'] = df['lifecycle:transition'].map({'schedule':0,'start':1,'suspend':2,'withdraw':3,'ate_abort':4,'resume':5, 'complete':6})
 
         #create a dictionary for the concept:name
         unique_activities = df['concept:name'].unique()
@@ -237,7 +237,9 @@ class Auxiliary:
                 df.at[i, 'Next Time'] = -1
         print("Finished preprocessing data")
 
-        df['Week Day'] = df['time:timestamp'].apply(lambda x: x.strftime('%w'))
+        df['case:REG_DATE'] = df['time:timestamp']
+
+        # df['Week Day'] = df['time:timestamp'].apply(lambda x: x.strftime('%w'))
 
         return df
     
@@ -362,4 +364,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-# Model.save_csv(Auxiliary.preprocess_data(Model.get_csv('BPI_Challenge_2012.csv')), 'dsafds.csv')
+# df = Auxiliary.preprocess_data_2017(Model.get_csv('BPI_Challenge_2017.csv'))
