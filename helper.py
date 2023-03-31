@@ -197,6 +197,50 @@ class Auxiliary:
 
         return df
     
+    def preprocess_data_2017(df):
+        print("Start preprocessing data")
+        lengthOfDf = len(df.index)
+
+        df['case:concept:name'] = df['case:concept:name'].apply(lambda x: int(x.removeprefix('Application_')))
+
+        #map the lifecycle:transition
+        df['lifecycle:transition'] = df['lifecycle:transition'].map({'COMPLETE':2,'SCHEDULE':0,'START':1})
+
+        #create a dictionary for the concept:name
+        unique_activities = df['concept:name'].unique()
+        # create a new column for each event
+        for i in unique_activities:
+            df[i] = [1 if x == i else 0 for x in df['concept:name']]
+        dictionary = {unique_activities[i]: i for i in range(unique_activities.size)}
+        #map the concept:name
+        df['concept:name'] = df['concept:name'].map(dictionary)
+
+        #create new columns for the date
+        df['year'] = [Model.get_year(x) for x in df['time:timestamp']]
+        df['month'] = [Model.get_month(x) for x in df['time:timestamp']]
+        df['day'] = [Model.get_day(x) for x in df['time:timestamp']]
+        df['hour'] = [Model.get_hour(x) for x in df['time:timestamp']]
+        df['minute'] = [Model.get_minute(x) for x in df['time:timestamp']]
+        df['second'] = [Model.get_second(x) for x in df['time:timestamp']]
+
+        for i in range(lengthOfDf):
+            #create new column for the ground truth
+            if i < lengthOfDf - 1:
+                if df.at[i, 'case:concept:name'] == df.at[i + 1, 'case:concept:name']:
+                    df.at[i, 'Next Event'] = df.at[i + 1, 'concept:name']
+                    df.at[i, 'Next Time'] = Model.get_time_difference_as_number(df.at[i, 'time:timestamp'], df.at[i + 1, 'time:timestamp'])
+                else:
+                    df.at[i, 'Next Event'] = -1
+                    df.at[i, 'Next Time'] = -1
+            else:
+                df.at[i, 'Next Event'] = -1
+                df.at[i, 'Next Time'] = -1
+        print("Finished preprocessing data")
+
+        df['Week Day'] = df['time:timestamp'].apply(lambda x: x.strftime('%w'))
+
+        return df
+    
     
     
     
