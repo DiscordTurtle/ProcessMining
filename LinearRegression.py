@@ -25,7 +25,7 @@ df_train, df_test = Auxiliary.train_test_split(Auxiliary.preprocess_data(df))
 print(df_train.columns)
 
 #only select needed columns
-df_train = df_train[['org:resource', 'case:concept:name', 'concept:name', 'day', 'Next Time', 'lifecycle:transition', 
+df_train = df_train[['org:resource', 'case:concept:name', 'concept:name', 'month', 'day', 'Week Day', 'Next Time', 'lifecycle:transition', 
                         'A_SUBMITTED', 'A_PARTLYSUBMITTED', 'A_PREACCEPTED',
                         'W_Completeren aanvraag', 'A_ACCEPTED', 'O_SELECTED', 'A_FINALIZED',
                         'O_CREATED', 'O_SENT', 'W_Nabellen offertes', 'O_SENT_BACK',
@@ -33,7 +33,7 @@ df_train = df_train[['org:resource', 'case:concept:name', 'concept:name', 'day',
                         'A_ACTIVATED', 'O_CANCELLED', 'W_Wijzigen contractgegevens',
                         'A_DECLINED', 'A_CANCELLED', 'W_Afhandelen leads', 'O_DECLINED',
                         'W_Nabellen incomplete dossiers', 'W_Beoordelen fraude']]
-df_test = df_test[['org:resource', 'case:concept:name', 'concept:name', 'day', 'Next Time', 'lifecycle:transition', 
+df_test = df_test[['org:resource', 'case:concept:name', 'concept:name', 'month', 'day', 'Week Day', 'Next Time', 'lifecycle:transition', 
                         'A_SUBMITTED', 'A_PARTLYSUBMITTED', 'A_PREACCEPTED',
                         'W_Completeren aanvraag', 'A_ACCEPTED', 'O_SELECTED', 'A_FINALIZED',
                         'O_CREATED', 'O_SENT', 'W_Nabellen offertes', 'O_SENT_BACK',
@@ -60,7 +60,7 @@ df_test = df_test[df_test["Next Time"] < q_test_hi]
 
 #split the data into training and test sets and drop some data
 #x_train = df_train[['org:resource', 'lifecycle:transition','concept:name','case:AMOUNT_REQ','month', 'day']]
-X_train = df_train[['org:resource', 'concept:name', 'day', 'lifecycle:transition', 
+X_train = df_train[['org:resource', 'day', 'month', 'Week Day', 'lifecycle:transition', 
                         'A_SUBMITTED', 'A_PARTLYSUBMITTED', 'A_PREACCEPTED',
                         'W_Completeren aanvraag', 'A_ACCEPTED', 'O_SELECTED', 'A_FINALIZED',
                         'O_CREATED', 'O_SENT', 'W_Nabellen offertes', 'O_SENT_BACK',
@@ -70,7 +70,7 @@ X_train = df_train[['org:resource', 'concept:name', 'day', 'lifecycle:transition
                         'W_Nabellen incomplete dossiers', 'W_Beoordelen fraude']]
 y_train = df_train[['Next Time']]
 #x_test = df_test[['org:resource', 'lifecycle:transition','concept:name','case:AMOUNT_REQ','month', 'day']]
-X_test = df_test[['org:resource', 'concept:name', 'day', 'lifecycle:transition', 
+X_test = df_test[['org:resource', 'day', 'month', 'Week Day', 'lifecycle:transition', 
                         'A_SUBMITTED', 'A_PARTLYSUBMITTED', 'A_PREACCEPTED',
                         'W_Completeren aanvraag', 'A_ACCEPTED', 'O_SELECTED', 'A_FINALIZED',
                         'O_CREATED', 'O_SENT', 'W_Nabellen offertes', 'O_SENT_BACK',
@@ -134,7 +134,6 @@ print(y_pred.size)
 print("\nR2-Score:",  r2score, "\nR2-score train:", r2score_train)
 
 # Export predicted data vs Ground truth
-print(df_train[['concept:name']])
 compare_result = pd.DataFrame()
 compare_result['Next time'] = y_test
 compare_result['Predicted Event'] = y_pred
